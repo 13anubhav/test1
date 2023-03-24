@@ -1,74 +1,132 @@
+
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Currency Converter</title>
-	<style>
-		label {
-			display: block;
-			margin-bottom: 10px;
-		}
-		input[type="text"] {
-			padding: 5px;
-			border-radius: 5px;
-			border: 1px solid #ccc;
-			margin-bottom: 10px;
-			width: 100%;
-			box-sizing: border-box;
-		}
-		button {
-			background-color: #4CAF50;
-			color: white;
-			padding: 10px 20px;
-			border: none;
-			border-radius: 5px;
-			cursor: pointer;
-		}
-		button:hover {
-			background-color: #3e8e41;
-		}
-		.result {
-			margin-top: 20px;
-			font-size: 20px;
-			font-weight: bold;
-		}
-	</style>
+	<title>Anubhav Image Search</title>
+	<link rel="stylesheet" type="text/css" href="style.css">
 </head>
 <body>
-	<h1>Currency Converter</h1>
-	<form id="converter">
-		<label for="source">Source Currency:</label>
-		<input type="text" id="source" name="source" placeholder="e.g. USD">
-		<label for="target">Target Currency:</label>
-		<input type="text" id="target" name="target" placeholder="e.g. EUR">
-		<label for="amount">Amount:</label>
-		<input type="text" id="amount" name="amount" placeholder="e.g. 100">
-		<button type="button" onclick="convert()">Convert</button>
+	<h1>Anubhav Image Search</h1>
+	<form id="search-form">
+		<label for="search-term">Search for:</label>
+		<input type="text" id="search-term" name="search-term">
+		<button type="submit">Search</button>
 	</form>
-	<div class="result" id="result"></div>
-	<script>
-		function convert() {
-			const source = document.getElementById('source').value;
-			const target = document.getElementById('target').value;
-			const amount = document.getElementById('amount').value;
-			const options = {
-				"method": "GET",
-				"headers": {
-					"x-rapidapi-key": "API_KEY",
-					"x-rapidapi-host": "currency-converter-by-api-ninjas.p.rapidapi.com"
-				}
-			};
-			fetch(`https://currency-converter-by-api-ninjas.p.rapidapi.com/v1/convertcurrency?have=${source}&want=${target}&amount=${amount}`, options)
-			.then(response => response.json())
-			.then(data => {
-				const result = document.getElementById('result');
-				result.innerHTML = `${amount} ${source} = ${data.response} ${target}`;
-			})
-			.catch(err => {
-				console.error(err);
-				const result = document.getElementById('result');
-				result.innerHTML = 'An error occurred. Please try again later.';
-			});
-		}
-	</script>
+	<div id="image-container"></div>
+
+	<style>
+ 
+ body {
+  background-color: #f9f9f9;
+  font-family: Arial, sans-serif;
+}
+
+h1 {
+  text-align: center;
+  margin: 30px 0;
+}
+
+#search-form {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+#search-term {
+  width: 300px;
+  padding: 10px;
+  font-size: 16px;
+  border: none;
+  border-radius: 5px 0 0 5px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+#search-term:focus {
+  outline: none;
+}
+
+#search-btn {
+  padding: 10px 15px;
+  background-color: #4CAF50;
+  border: none;
+  border-radius: 0 5px 5px 0;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+#search-btn:hover {
+  background-color: #3e8e41;
+}
+
+#image-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+img {
+  width: 200px;
+  height: 200px;
+  object-fit: cover;
+  margin: 10px;
+  border-radius: 5px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+  transition: transform 0.3s ease;
+}
+
+img:hover {
+  transform: scale(1.1);
+}
+
+    </style>
+
+    <script>
+       const subscriptionKey = 'API_KEY';
+const endpoint = 'https://bing-image-search1.p.rapidapi.com/images/search';
+
+const searchForm = document.getElementById('search-form');
+const searchTermInput = document.getElementById('search-term');
+const searchBtn = document.getElementById('search-btn');
+const imageContainer = document.getElementById('image-container');
+
+searchForm.addEventListener('submit', event => {
+  event.preventDefault();
+  const searchTerm = searchTermInput.value;
+  imageContainer.innerHTML = '';
+
+  fetch(`${endpoint}?q=${encodeURIComponent(searchTerm)}`, {
+    headers: {
+      'x-rapidapi-key': subscriptionKey,
+      'x-rapidapi-host': 'bing-image-search1.p.rapidapi.com'
+    }
+  })
+    .then(response => response.json())
+    .then(data => {
+      const images = data.value;
+
+      for (let i = 0; i < images.length; i++) {
+        const image = images[i];
+        const imgElement = document.createElement('img');
+        imgElement.src = image.thumbnailUrl;
+        imgElement.alt = image.name;
+        imgElement.title = image.name;
+        imageContainer.appendChild(imgElement);
+      }
+    })
+    .catch(error => console.error(error));
+});
+
+searchBtn.addEventListener('mouseover', () => {
+  searchBtn.style.backgroundColor = '#3e8e41';
+});
+
+searchBtn.addEventListener('mouseout', () => {
+  searchBtn.style.backgroundColor = '#4CAF50';
+});
+
+    </script>
 </body>
 </html>

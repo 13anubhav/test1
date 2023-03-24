@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Currency Converter</title>
+	<style>
+		label {
+			display: block;
+			margin-bottom: 10px;
+		}
+		input[type="text"] {
+			padding: 5px;
+			border-radius: 5px;
+			border: 1px solid #ccc;
+			margin-bottom: 10px;
+			width: 100%;
+			box-sizing: border-box;
+		}
+		button {
+			background-color: #4CAF50;
+			color: white;
+			padding: 10px 20px;
+			border: none;
+			border-radius: 5px;
+			cursor: pointer;
+		}
+		button:hover {
+			background-color: #3e8e41;
+		}
+		.result {
+			margin-top: 20px;
+			font-size: 20px;
+			font-weight: bold;
+		}
+	</style>
+</head>
+<body>
+	<h1>Currency Converter</h1>
+	<form id="converter">
+		<label for="source">Source Currency:</label>
+		<input type="text" id="source" name="source" placeholder="e.g. USD">
+		<label for="target">Target Currency:</label>
+		<input type="text" id="target" name="target" placeholder="e.g. EUR">
+		<label for="amount">Amount:</label>
+		<input type="text" id="amount" name="amount" placeholder="e.g. 100">
+		<button type="button" onclick="convert()">Convert</button>
+	</form>
+	<div class="result" id="result"></div>
+	<script>
+		function convert() {
+			const source = document.getElementById('source').value;
+			const target = document.getElementById('target').value;
+			const amount = document.getElementById('amount').value;
+			const options = {
+				"method": "GET",
+				"headers": {
+					"x-rapidapi-key": "api_key",
+					"x-rapidapi-host": "currency-converter-by-api-ninjas.p.rapidapi.com"
+				}
+			};
+			fetch(`https://currency-converter-by-api-ninjas.p.rapidapi.com/v1/convertcurrency?have=${source}&want=${target}&amount=${amount}`, options)
+			.then(response => response.json())
+			.then(data => {
+				const result = document.getElementById('result');
+				result.innerHTML = `${amount} ${source} = ${data.response} ${target}`;
+			})
+			.catch(err => {
+				console.error(err);
+				const result = document.getElementById('result');
+				result.innerHTML = 'An error occurred. Please try again later.';
+			});
+		}
+	</script>
+</body>
+</html>
